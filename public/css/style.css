@@ -1,0 +1,120 @@
+.components_wrap{
+    margin: 0 auto;
+    width: 92%;
+    max-width: 1540px;
+    padding: 80px 0;
+}
+#main{
+    padding: 30px 0;
+}
+#scale{
+    display: flex;
+    border-bottom: 3px solid #000;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    width: 1024px;
+    margin: 0 auto 30px auto;
+}
+.item{
+    position: relative;
+    margin: 0 0 5px 0;
+}
+.item:before{
+    content: '';
+    width: 2px;
+    height: 5px;
+    left: 50%;
+    margin-left: -1px;
+    display: block;
+    position: absolute;
+    bottom: -5px;
+    background: #000;
+}
+.item:first-child:before{
+    left: 1px;
+    width: 4px;
+}
+.item:last-child:before{
+    left: inherit;
+    right: 0px;
+    width: 4px;
+}
+#slider{
+    height: 20px;
+    border: 1px solid #c4c4c4;
+    border-radius: 10px;
+    width: 1024px;
+    margin: 0 auto;
+    display: flex;
+    position: relative;
+}
+.slider_wrap{
+    background: green;
+    height: 100%;
+    border-radius: 10px;
+    font-size: 0;
+    display: flex;
+    position: absolute;
+}
+.left,
+.right{
+    width: 15%;
+    cursor: w-resize;
+}
+.middle{
+    width: 70%;
+    cursor: move;
+}
+.option{
+    display: inline-block;
+    margin: 0 15px 0 0;
+}
+.add_new_interval_wrap{
+    margin: 30px 0;
+}
+.delete{
+    cursor: pointer;
+    transition: .3s;
+}
+h1{
+    font-size: 30px;
+    text-align: center;
+    margin: 0 0 40px 0;
+}
+label{
+    display: block;
+    font-size: 22px;
+    padding: 0 0 0 10px;
+    margin: 0 0 3px 0;
+}
+input[type="number"],
+input[type="number"]:focus{
+    padding: 5px 10px;
+    border: 1px solid green;
+    border-radius: 3px;
+    box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.2);
+}
+button{
+    padding: 5px 15px;
+    box-shadow: none;
+    border: 1px solid rgba(0,128,0,0);
+    background: rgba(0,128,0,0.4);
+    color: white;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: .3s;
+}
+button:hover{
+    background: rgba(0,128,0,0.6);
+    transition: .3s;
+}
+table {
+    border-collapse: collapse; 
+    width: 100%;
+    margin: 50px 0 30px 0;
+}
+td {
+    text-align: center;
+    border: 1px solid green;
+    padding: 10px;
+}
