@@ -9,7 +9,7 @@ export function changeMin(data) {
 export function changeMax(data) {
     return {
         type: "NEW_MAX",
-        new_min: data.new_max
+        new_max: data.new_max
     }
 }
 

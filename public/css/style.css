@@ -59,9 +59,11 @@
 .left,
 .right{
     width: 15%;
+    cursor: w-resize;
 }
 .middle{
     width: 70%;
+    cursor: move;
 }
 .option{
     display: inline-block;
