@@ -23,13 +23,13 @@ class Interval extends React.Component {
 
     inputFromHandler(e) {
         this.setState({
-            from: e.target.value
+            from: +e.target.value
         })
     }
 
     inputToHandler(e) {
         this.setState({
-            to: e.target.value
+            to: +e.target.value
         })
     }
 

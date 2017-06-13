@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { pushItemRect } from '../action';
 import { deleteInterval } from '../action';
 
 class List extends React.Component {

@@ -9,11 +9,11 @@ const initialState = {
     scale_ready: false,
     items: [],
     scales: [
-        { from: 1, to: 4},
+        { from: 18, to: 20},
     ],
+    cur_drag: "",
     drag_mid: {
-        from: 0,
-        to: 0
+
     }
     
 }
@@ -26,15 +26,15 @@ function intervalApp(state, action){
     switch(action.type){
         case "NEW_MIN" :
             return Object.assign( {}, state, { min: action.new_min});
-            break;
+            
         case "NEW_MAX" :
             return Object.assign( {}, state, { max: action.new_max});
-            break;
+            
         case "ONE_INTERVAL":
             return Object.assign( {}, state, { 
                 one_interval_size: action.size,
                 item_size: action.item_size});
-            break;
+            
         case "PUSH_ITEM_RECT":
             return Object.assign( {}, state, { 
                 items: [
@@ -42,16 +42,20 @@ function intervalApp(state, action){
                     action.data
                     ]
                 });
-            break;
+            
         case "SCALE_READY":
             return Object.assign( {}, state, { 
                 scale_ready: action.data,
                 });
-            break;
+            
         case "ADD_INTERVAL":
 
             if(+action.data.from == 0 || +action.data.to == 0){
                 alert("Проверьте поля интервала, в полях интервала не может быть 0");
+                return state;
+            }
+            else if(+action.data.from < 0 && +action.data.from < 0) {
+                alert("Проверьте поля интервала, в полях интервала не может быть меньше 0");
                 return state;
             }
             else if(+action.data.from >= +action.data.to){
@@ -81,12 +85,6 @@ function intervalApp(state, action){
                 for(var i = 0; state.scales.length > i; i++){
 
                     if(+action.data.from > +state.scales[i].from && +action.data.from < +state.scales[i].to){
-
-                        console.log(+action.data.from);
-                        console.log(+state.scales[i].from);
-                        console.log(+action.data.to);
-                        console.log(+state.scales[i].to);
-
                         all_good = false;
                         break;
 
@@ -129,7 +127,151 @@ function intervalApp(state, action){
                 } 
 
             }
-            break;
+            
+        case "MIDDLE_DRAG_START":
+            return Object.assign( {}, state, { 
+                drag_mid: action.data,
+                cur_drag: action.data.cur_drag
+                });
+            
+        case "MIDDLE_DRAG_OVER":
+            if(state.cur_drag == "middle") {
+                if(action.data.clientX + state.drag_mid.difference >= state.drag_mid.toScale && state.scales[state.drag_mid.index].to < state.items.length){
+                    var to = state.scales[state.drag_mid.index].to >= state.items.length ?
+                     state.scales[state.drag_mid.index].to : 
+                     state.scales[state.drag_mid.index].to+1;
+                    
+                    var from = state.scales[state.drag_mid.index].to >= state.items.length ?
+                     state.scales[state.drag_mid.index].from : 
+                     state.scales[state.drag_mid.index].from+1;
+
+
+                    var newScales = [
+                        ...state.scales.slice(0,state.drag_mid.index),
+                        {
+                            from: from,
+                            to: to,
+                        },
+                        ...state.scales.slice(state.drag_mid.index+1),
+                    ];
+
+                    var dragDrag = Object.assign({}, state.drag_mid, {
+                            toScale: state.items[state.scales[state.drag_mid.index].to].rect.right,
+                            beforeScale: state.items[state.scales[state.drag_mid.index].from].rect.right,
+                            difference: state.drag_mid.difference,
+                            clientX: action.data.clientX,
+                            index: state.drag_mid.index  
+                    })
+                    return Object.assign( {}, state, { 
+                        scales: newScales,
+                        drag_mid: dragDrag
+                    });
+                } else if(action.data.clientX + state.drag_mid.difference <= state.drag_mid.beforeScale){
+                    if(state.scales[state.drag_mid.index].to >= state.items.length) {
+                        var to = state.items.length-1;
+                    } else {
+                        var to = state.scales[state.drag_mid.index].from <= 1 ?
+                            state.scales[state.drag_mid.index].to : 
+                            state.scales[state.drag_mid.index].to-1;
+                    }
+                    
+                    var from = state.scales[state.drag_mid.index].from <= 1 ?
+                     state.scales[state.drag_mid.index].from : 
+                     state.scales[state.drag_mid.index].from-1;
+
+                    var newScales = [
+                        ...state.scales.slice(0,state.drag_mid.index),
+                        {
+                            from: from,
+                            to: to,
+                        },
+                        ...state.scales.slice(state.drag_mid.index+1),
+                    ];
+
+                    var dragDrag = Object.assign({}, state.drag_mid, {
+                            toScale: state.items[to].rect.right,
+                            beforeScale: state.items[from].rect.right,
+                            difference: state.drag_mid.difference,
+                            clientX: action.data.clientX,
+                            index: state.drag_mid.index  
+                    })
+                    return Object.assign( {}, state, { 
+                        scales: newScales,
+                        drag_mid: dragDrag
+                    });
+                }
+            } 
+            else if(state.cur_drag == "left") {
+                if(action.data.clientX + state.drag_mid.difference <= state.drag_mid.beforeScale){
+                    if(state.scales[state.drag_mid.index].to >= state.items.length) {
+                        var to = state.items.length-1;
+                    } else {
+                        var to = state.scales[state.drag_mid.index].to;
+                    }
+                    
+                    var from = state.scales[state.drag_mid.index].from <= 1 ?
+                     state.scales[state.drag_mid.index].from : 
+                     state.scales[state.drag_mid.index].from-1;
+
+                    var newScales = [
+                        ...state.scales.slice(0,state.drag_mid.index),
+                        {
+                            from: from,
+                            to: to,
+                        },
+                        ...state.scales.slice(state.drag_mid.index+1),
+                    ];
+
+                    var dragDrag = Object.assign({}, state.drag_mid, {
+                            toScale: state.items[to].rect.right,
+                            beforeScale: state.items[from].rect.right,
+                            difference: state.drag_mid.difference,
+                            clientX: action.data.clientX,
+                            index: state.drag_mid.index  
+                    })
+                    return Object.assign( {}, state, { 
+                        scales: newScales,
+                        drag_mid: dragDrag
+                    });
+                }
+            } else if(state.cur_drag == "right") {
+                if(action.data.clientX + state.drag_mid.difference >= state.drag_mid.toScale && state.scales[state.drag_mid.index].to < state.items.length){
+                    var to = state.scales[state.drag_mid.index].to >= state.items.length ?
+                     state.scales[state.drag_mid.index].to : 
+                     state.scales[state.drag_mid.index].to+1;
+                    
+                    var from = state.scales[state.drag_mid.index].from; 
+                    
+                    var newScales = [
+                        ...state.scales.slice(0,state.drag_mid.index),
+                        {
+                            from: from,
+                            to: to,
+                        },
+                        ...state.scales.slice(state.drag_mid.index+1),
+                    ];
+
+                    var dragDrag = Object.assign({}, state.drag_mid, {
+                            toScale: state.items[state.scales[state.drag_mid.index].to].rect.right,
+                            beforeScale: state.items[state.scales[state.drag_mid.index].from].rect.right,
+                            difference: state.drag_mid.difference,
+                            clientX: action.data.clientX,
+                            index: state.drag_mid.index  
+                    })
+                    return Object.assign( {}, state, { 
+                        scales: newScales,
+                        drag_mid: dragDrag
+                    });
+                }
+            }
+            return state;
+            
+        case "DRAG_END":
+            return Object.assign( {}, state, { 
+                cur_drag: "",
+
+                });
+            
         case "DELETE_INTERVAL":
             return Object.assign( {}, state, { 
                 scales: [
@@ -137,7 +279,7 @@ function intervalApp(state, action){
                     ...state.scales.slice(+action.data + 1)
                 ]
                 });
-            break;    
+              
     }
 
 }

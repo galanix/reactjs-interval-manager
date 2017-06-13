@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { setOneIntervalSize } from '../action';
+import { dragMiddle } from '../action';
+
 
 class GreenInterval extends React.Component {
     constructor(props) {
@@ -8,39 +9,27 @@ class GreenInterval extends React.Component {
 
         this.dragStartHandler = this.dragStartHandler.bind(this);
         this.dragOverHandler = this.dragOverHandler.bind(this);
-        this.dropHandler = this.dropHandler.bind(this);
     }
 
     dragStartHandler(e) {
-        e.nativeEvent.preventDefault();
-        console.log(this.props.items[this.props.index].rect);
-        console.log(this.props.scales[this.props.index]);
-        console.log(e.nativeEvent.clientX);
-        console.log(e.target.parentNode.getBoundingClientRect());
-        console.log(this.props.items[this.props.index+1].rect);
-        
-       /*switch(e.target.className) {
-            case "middle":
-                onDragMiddle();
-        }*/
-        //this.props.
         e.nativeEvent.dataTransfer.setData('text/html',null);
-        
-        //console.log(e.nativeEvent);
-    }
-
-    dragEndHandler(e) {
-        console.log(e.nativeEvent);
-    }
-
-    dropHandler(e) {
-        e.nativeEvent.preventDefault();
-        console.log(e.nativeEvent);
+        var toScale = +this.props.scales[+this.props.index].to;
+        if(toScale < this.props.items.length) {
+            var beforeScale = this.props.scales[this.props.index].from
+            var data = {
+                toScale: this.props.items[toScale].rect.right,
+                beforeScale: this.props.items[beforeScale].rect.right,
+                difference: e.target.parentNode.getBoundingClientRect().right - e.nativeEvent.clientX,
+                clientX: e.nativeEvent.clientX,
+                index: this.props.index,
+                cur_drag: e.target.className
+            }
+            this.props.onDragMiddle(data);
+        }
     }
 
     dragOverHandler(e) {
         e.nativeEvent.preventDefault();
-        //console.log(e.nativeEvent);
     }
 
     render() {
@@ -49,18 +38,17 @@ class GreenInterval extends React.Component {
                  <span className="left" 
                     draggable="true" 
                     onDragStart={this.dragStartHandler}
+                    onDragOver={this.dragOverHandler}
                  >
                  </span>
                  <span className="middle" 
                     draggable="true" 
-                    onDragStart={this.dragStartHandler}
-                   
+                    onDragStart={this.dragStartHandler}         
                  >
                  </span>
                  <span className="right"   
                     draggable="true" 
                     onDragStart={this.dragStartHandler}
-                   
                  >
                  </span>
              </div>
@@ -70,11 +58,8 @@ class GreenInterval extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onDragStart: (data) => {
-        dispatch(setOneIntervalSize(data));
-    },
     onDragMiddle: (data) => {
-        dispatch(dragSlide(data));
+        dispatch(dragMiddle(data));
     }
   }
 }

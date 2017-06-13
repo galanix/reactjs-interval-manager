@@ -1515,6 +1515,96 @@ module.exports = ReactCurrentOwner;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.changeMin = changeMin;
+exports.changeMax = changeMax;
+exports.setOneIntervalSize = setOneIntervalSize;
+exports.pushItemRect = pushItemRect;
+exports.scaleReady = scaleReady;
+exports.addInterval = addInterval;
+exports.dragMiddle = dragMiddle;
+exports.dragOver = dragOver;
+exports.endDraging = endDraging;
+exports.deleteInterval = deleteInterval;
+function changeMin(data) {
+    return {
+        type: "NEW_MIN",
+        new_min: data.new_min
+    };
+}
+
+function changeMax(data) {
+    return {
+        type: "NEW_MAX",
+        new_max: data.new_max
+    };
+}
+
+function setOneIntervalSize(data) {
+    return {
+        type: "ONE_INTERVAL",
+        size: data.size,
+        item_size: data.item_size
+    };
+}
+
+function pushItemRect(data) {
+    return {
+        type: "PUSH_ITEM_RECT",
+        data: data
+    };
+}
+
+function scaleReady(data) {
+    return {
+        type: "SCALE_READY",
+        data: data.scale_ready
+    };
+}
+
+function addInterval(data) {
+    return {
+        type: "ADD_INTERVAL",
+        data: data
+    };
+}
+
+function dragMiddle(data) {
+    return {
+        type: "MIDDLE_DRAG_START",
+        data: data
+    };
+}
+
+function dragOver(data) {
+    return {
+        type: "MIDDLE_DRAG_OVER",
+        data: data
+    };
+}
+
+function endDraging() {
+    return {
+        type: "DRAG_END"
+    };
+}
+
+function deleteInterval(data) {
+    return {
+        type: "DELETE_INTERVAL",
+        data: data
+    };
+}
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -1783,73 +1873,6 @@ function getPooledWarningPropertyDefinition(propName, getVal) {
   }
 }
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.changeMin = changeMin;
-exports.changeMax = changeMax;
-exports.setOneIntervalSize = setOneIntervalSize;
-exports.pushItemRect = pushItemRect;
-exports.scaleReady = scaleReady;
-exports.addInterval = addInterval;
-exports.deleteInterval = deleteInterval;
-function changeMin(data) {
-    return {
-        type: "NEW_MIN",
-        new_min: data.new_min
-    };
-}
-
-function changeMax(data) {
-    return {
-        type: "NEW_MAX",
-        new_max: data.new_max
-    };
-}
-
-function setOneIntervalSize(data) {
-    return {
-        type: "ONE_INTERVAL",
-        size: data.size,
-        item_size: data.item_size
-    };
-}
-
-function pushItemRect(data) {
-    return {
-        type: "PUSH_ITEM_RECT",
-        data: data
-    };
-}
-
-function scaleReady(data) {
-    return {
-        type: "SCALE_READY",
-        data: data.scale_ready
-    };
-}
-
-function addInterval(data) {
-    return {
-        type: "ADD_INTERVAL",
-        data: data
-    };
-}
-
-function deleteInterval(data) {
-    return {
-        type: "DELETE_INTERVAL",
-        data: data
-    };
-}
 
 /***/ }),
 /* 16 */
@@ -3503,7 +3526,7 @@ module.exports = ReactInstanceMap;
 
 
 
-var SyntheticEvent = __webpack_require__(14);
+var SyntheticEvent = __webpack_require__(15);
 
 var getEventTarget = __webpack_require__(49);
 
@@ -11088,6 +11111,8 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(11);
 
+var _action = __webpack_require__(14);
+
 var _MinComponent = __webpack_require__(105);
 
 var _MinComponent2 = _interopRequireDefault(_MinComponent);
@@ -11116,31 +11141,31 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var CombineApp = function (_React$Component) {
-    _inherits(CombineApp, _React$Component);
+var App = function (_React$Component) {
+    _inherits(App, _React$Component);
 
-    function CombineApp(props) {
-        _classCallCheck(this, CombineApp);
+    function App(props) {
+        _classCallCheck(this, App);
 
-        var _this = _possibleConstructorReturn(this, (CombineApp.__proto__ || Object.getPrototypeOf(CombineApp)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
-        _this.consoleHandler = _this.consoleHandler.bind(_this);
+        _this.dragEndHandler = _this.dragEndHandler.bind(_this);
         return _this;
     }
 
-    _createClass(CombineApp, [{
-        key: 'consoleHandler',
-        value: function consoleHandler(e) {
-
-            //console.log(e);
-
+    _createClass(App, [{
+        key: 'dragEndHandler',
+        value: function dragEndHandler(e) {
+            e.nativeEvent.preventDefault();
+            this.props.onEnd();
         }
     }, {
         key: 'render',
         value: function render() {
             return _react2.default.createElement(
                 'div',
-                { className: 'components_wrap' },
+                { className: 'components_wrap',
+                    onDragEnd: this.dragEndHandler },
                 _react2.default.createElement(
                     'h1',
                     null,
@@ -11155,8 +11180,22 @@ var CombineApp = function (_React$Component) {
         }
     }]);
 
-    return CombineApp;
+    return App;
 }(_react2.default.Component);
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+    return {
+        onEnd: function onEnd() {
+            dispatch((0, _action.endDraging)());
+        }
+    };
+};
+
+var mapStateToProps = function mapStateToProps(state) {
+    return state;
+};
+
+var CombineApp = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(App);
 
 exports.default = CombineApp;
 
@@ -11183,11 +11222,9 @@ var initialState = {
     scale_size: SCALE_SIZE,
     scale_ready: false,
     items: [],
-    scales: [{ from: 1, to: 4 }],
-    drag_mid: {
-        from: 0,
-        to: 0
-    }
+    scales: [{ from: 18, to: 20 }],
+    cur_drag: "",
+    drag_mid: {}
 
 };
 
@@ -11199,29 +11236,32 @@ function intervalApp(state, action) {
     switch (action.type) {
         case "NEW_MIN":
             return Object.assign({}, state, { min: action.new_min });
-            break;
+
         case "NEW_MAX":
             return Object.assign({}, state, { max: action.new_max });
-            break;
+
         case "ONE_INTERVAL":
             return Object.assign({}, state, {
                 one_interval_size: action.size,
                 item_size: action.item_size });
-            break;
+
         case "PUSH_ITEM_RECT":
             return Object.assign({}, state, {
                 items: [].concat(_toConsumableArray(state.items), [action.data])
             });
-            break;
+
         case "SCALE_READY":
             return Object.assign({}, state, {
                 scale_ready: action.data
             });
-            break;
+
         case "ADD_INTERVAL":
 
             if (+action.data.from == 0 || +action.data.to == 0) {
                 alert("Проверьте поля интервала, в полях интервала не может быть 0");
+                return state;
+            } else if (+action.data.from < 0 && +action.data.from < 0) {
+                alert("Проверьте поля интервала, в полях интервала не может быть меньше 0");
                 return state;
             } else if (+action.data.from >= +action.data.to) {
                 alert("Проверьте поля интервала, значение первого поля не может быть больше или равняться второму");
@@ -11245,12 +11285,6 @@ function intervalApp(state, action) {
                 for (var i = 0; state.scales.length > i; i++) {
 
                     if (+action.data.from > +state.scales[i].from && +action.data.from < +state.scales[i].to) {
-
-                        console.log(+action.data.from);
-                        console.log(+state.scales[i].from);
-                        console.log(+action.data.to);
-                        console.log(+state.scales[i].to);
-
                         all_good = false;
                         break;
                     } else if (+action.data.to > +state.scales[i].from && +action.data.to < +state.scales[i].to) {
@@ -11279,12 +11313,126 @@ function intervalApp(state, action) {
                     return state;
                 }
             }
-            break;
+
+        case "MIDDLE_DRAG_START":
+            return Object.assign({}, state, {
+                drag_mid: action.data,
+                cur_drag: action.data.cur_drag
+            });
+
+        case "MIDDLE_DRAG_OVER":
+            if (state.cur_drag == "middle") {
+                if (action.data.clientX + state.drag_mid.difference >= state.drag_mid.toScale && state.scales[state.drag_mid.index].to < state.items.length) {
+                    var to = state.scales[state.drag_mid.index].to >= state.items.length ? state.scales[state.drag_mid.index].to : state.scales[state.drag_mid.index].to + 1;
+
+                    var from = state.scales[state.drag_mid.index].to >= state.items.length ? state.scales[state.drag_mid.index].from : state.scales[state.drag_mid.index].from + 1;
+
+                    var newScales = [].concat(_toConsumableArray(state.scales.slice(0, state.drag_mid.index)), [{
+                        from: from,
+                        to: to
+                    }], _toConsumableArray(state.scales.slice(state.drag_mid.index + 1)));
+
+                    var dragDrag = Object.assign({}, state.drag_mid, {
+                        toScale: state.items[state.scales[state.drag_mid.index].to].rect.right,
+                        beforeScale: state.items[state.scales[state.drag_mid.index].from].rect.right,
+                        difference: state.drag_mid.difference,
+                        clientX: action.data.clientX,
+                        index: state.drag_mid.index
+                    });
+                    return Object.assign({}, state, {
+                        scales: newScales,
+                        drag_mid: dragDrag
+                    });
+                } else if (action.data.clientX + state.drag_mid.difference <= state.drag_mid.beforeScale) {
+                    if (state.scales[state.drag_mid.index].to >= state.items.length) {
+                        var to = state.items.length - 1;
+                    } else {
+                        var to = state.scales[state.drag_mid.index].from <= 1 ? state.scales[state.drag_mid.index].to : state.scales[state.drag_mid.index].to - 1;
+                    }
+
+                    var from = state.scales[state.drag_mid.index].from <= 1 ? state.scales[state.drag_mid.index].from : state.scales[state.drag_mid.index].from - 1;
+
+                    var newScales = [].concat(_toConsumableArray(state.scales.slice(0, state.drag_mid.index)), [{
+                        from: from,
+                        to: to
+                    }], _toConsumableArray(state.scales.slice(state.drag_mid.index + 1)));
+
+                    var dragDrag = Object.assign({}, state.drag_mid, {
+                        toScale: state.items[to].rect.right,
+                        beforeScale: state.items[from].rect.right,
+                        difference: state.drag_mid.difference,
+                        clientX: action.data.clientX,
+                        index: state.drag_mid.index
+                    });
+                    return Object.assign({}, state, {
+                        scales: newScales,
+                        drag_mid: dragDrag
+                    });
+                }
+            } else if (state.cur_drag == "left") {
+                if (action.data.clientX + state.drag_mid.difference <= state.drag_mid.beforeScale) {
+                    if (state.scales[state.drag_mid.index].to >= state.items.length) {
+                        var to = state.items.length - 1;
+                    } else {
+                        var to = state.scales[state.drag_mid.index].to;
+                    }
+
+                    var from = state.scales[state.drag_mid.index].from <= 1 ? state.scales[state.drag_mid.index].from : state.scales[state.drag_mid.index].from - 1;
+
+                    var newScales = [].concat(_toConsumableArray(state.scales.slice(0, state.drag_mid.index)), [{
+                        from: from,
+                        to: to
+                    }], _toConsumableArray(state.scales.slice(state.drag_mid.index + 1)));
+
+                    var dragDrag = Object.assign({}, state.drag_mid, {
+                        toScale: state.items[to].rect.right,
+                        beforeScale: state.items[from].rect.right,
+                        difference: state.drag_mid.difference,
+                        clientX: action.data.clientX,
+                        index: state.drag_mid.index
+                    });
+                    return Object.assign({}, state, {
+                        scales: newScales,
+                        drag_mid: dragDrag
+                    });
+                }
+            } else if (state.cur_drag == "right") {
+                if (action.data.clientX + state.drag_mid.difference >= state.drag_mid.toScale && state.scales[state.drag_mid.index].to < state.items.length) {
+                    var to = state.scales[state.drag_mid.index].to >= state.items.length ? state.scales[state.drag_mid.index].to : state.scales[state.drag_mid.index].to + 1;
+
+                    var from = state.scales[state.drag_mid.index].from;
+
+                    var newScales = [].concat(_toConsumableArray(state.scales.slice(0, state.drag_mid.index)), [{
+                        from: from,
+                        to: to
+                    }], _toConsumableArray(state.scales.slice(state.drag_mid.index + 1)));
+
+                    var dragDrag = Object.assign({}, state.drag_mid, {
+                        toScale: state.items[state.scales[state.drag_mid.index].to].rect.right,
+                        beforeScale: state.items[state.scales[state.drag_mid.index].from].rect.right,
+                        difference: state.drag_mid.difference,
+                        clientX: action.data.clientX,
+                        index: state.drag_mid.index
+                    });
+                    return Object.assign({}, state, {
+                        scales: newScales,
+                        drag_mid: dragDrag
+                    });
+                }
+            }
+            return state;
+
+        case "DRAG_END":
+            return Object.assign({}, state, {
+                cur_drag: ""
+
+            });
+
         case "DELETE_INTERVAL":
             return Object.assign({}, state, {
                 scales: [].concat(_toConsumableArray(state.scales.slice(0, +action.data)), _toConsumableArray(state.scales.slice(+action.data + 1)))
             });
-            break;
+
     }
 }
 
@@ -11319,7 +11467,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(11);
 
-var _action = __webpack_require__(15);
+var _action = __webpack_require__(14);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11339,45 +11487,31 @@ var GreenInterval = function (_React$Component) {
 
         _this.dragStartHandler = _this.dragStartHandler.bind(_this);
         _this.dragOverHandler = _this.dragOverHandler.bind(_this);
-        _this.dropHandler = _this.dropHandler.bind(_this);
         return _this;
     }
 
     _createClass(GreenInterval, [{
         key: 'dragStartHandler',
         value: function dragStartHandler(e) {
-            e.nativeEvent.preventDefault();
-            console.log(this.props.items[this.props.index].rect);
-            console.log(this.props.scales[this.props.index]);
-            console.log(e.nativeEvent.clientX);
-            console.log(e.target.parentNode.getBoundingClientRect());
-            console.log(this.props.items[this.props.index + 1].rect);
-
-            /*switch(e.target.className) {
-                 case "middle":
-                     onDragMiddle();
-             }*/
-            //this.props.
             e.nativeEvent.dataTransfer.setData('text/html', null);
-
-            //console.log(e.nativeEvent);
-        }
-    }, {
-        key: 'dragEndHandler',
-        value: function dragEndHandler(e) {
-            console.log(e.nativeEvent);
-        }
-    }, {
-        key: 'dropHandler',
-        value: function dropHandler(e) {
-            e.nativeEvent.preventDefault();
-            console.log(e.nativeEvent);
+            var toScale = +this.props.scales[+this.props.index].to;
+            if (toScale < this.props.items.length) {
+                var beforeScale = this.props.scales[this.props.index].from;
+                var data = {
+                    toScale: this.props.items[toScale].rect.right,
+                    beforeScale: this.props.items[beforeScale].rect.right,
+                    difference: e.target.parentNode.getBoundingClientRect().right - e.nativeEvent.clientX,
+                    clientX: e.nativeEvent.clientX,
+                    index: this.props.index,
+                    cur_drag: e.target.className
+                };
+                this.props.onDragMiddle(data);
+            }
         }
     }, {
         key: 'dragOverHandler',
         value: function dragOverHandler(e) {
             e.nativeEvent.preventDefault();
-            //console.log(e.nativeEvent);
         }
     }, {
         key: 'render',
@@ -11387,17 +11521,16 @@ var GreenInterval = function (_React$Component) {
                 { className: 'slider_wrap', style: { width: this.props.sliderWidth, marginLeft: this.props.marginItem } },
                 _react2.default.createElement('span', { className: 'left',
                     draggable: 'true',
-                    onDragStart: this.dragStartHandler
+                    onDragStart: this.dragStartHandler,
+                    onDragOver: this.dragOverHandler
                 }),
                 _react2.default.createElement('span', { className: 'middle',
                     draggable: 'true',
                     onDragStart: this.dragStartHandler
-
                 }),
                 _react2.default.createElement('span', { className: 'right',
                     draggable: 'true',
                     onDragStart: this.dragStartHandler
-
                 })
             );
         }
@@ -11408,11 +11541,8 @@ var GreenInterval = function (_React$Component) {
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     return {
-        onDragStart: function onDragStart(data) {
-            dispatch((0, _action.setOneIntervalSize)(data));
-        },
         onDragMiddle: function onDragMiddle(data) {
-            dispatch(dragSlide(data));
+            dispatch((0, _action.dragMiddle)(data));
         }
     };
 };
@@ -11444,7 +11574,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(11);
 
-var _action = __webpack_require__(15);
+var _action = __webpack_require__(14);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11482,14 +11612,14 @@ var Interval = function (_React$Component) {
         key: 'inputFromHandler',
         value: function inputFromHandler(e) {
             this.setState({
-                from: e.target.value
+                from: +e.target.value
             });
         }
     }, {
         key: 'inputToHandler',
         value: function inputToHandler(e) {
             this.setState({
-                to: e.target.value
+                to: +e.target.value
             });
         }
     }, {
@@ -11565,7 +11695,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(11);
 
-var _action = __webpack_require__(15);
+var _action = __webpack_require__(14);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11706,7 +11836,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(11);
 
-var _action = __webpack_require__(15);
+var _action = __webpack_require__(14);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11782,7 +11912,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(11);
 
-var _action = __webpack_require__(15);
+var _action = __webpack_require__(14);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11864,7 +11994,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(11);
 
-var _action = __webpack_require__(15);
+var _action = __webpack_require__(14);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11946,7 +12076,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(11);
 
-var _action = __webpack_require__(15);
+var _action = __webpack_require__(14);
 
 var _SliderComponent = __webpack_require__(107);
 
@@ -12039,7 +12169,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(11);
 
-var _action = __webpack_require__(15);
+var _action = __webpack_require__(14);
 
 var _IntervalComponent = __webpack_require__(100);
 
@@ -12064,10 +12194,6 @@ var Slider = function (_React$Component) {
         _this.dragStartHandler = _this.dragStartHandler.bind(_this);
         _this.dragOverHandler = _this.dragOverHandler.bind(_this);
         _this.dropHandler = _this.dropHandler.bind(_this);
-        _this.dragEnterHandler = _this.dragEnterHandler.bind(_this);
-        _this.dragHandler = _this.dragHandler.bind(_this);
-        _this.dragEndHandler = _this.dragEndHandler.bind(_this);
-        _this.dragLeaveHandler = _this.dragLeaveHandler.bind(_this);
         _this.renderScale = _this.renderScale.bind(_this);
 
         return _this;
@@ -12077,55 +12203,24 @@ var Slider = function (_React$Component) {
         key: 'dragStartHandler',
         value: function dragStartHandler(e) {
             e.nativeEvent.preventDefault();
-            console.log(e.target.className);
-            /* switch(e.target.className) {
-                 case "middle":
-                     onDragMiddle();
-             }*/
-            //this.props.
             e.nativeEvent.dataTransfer.setData('text/html', null);
-
-            console.log(e.nativeEvent);
-        }
-    }, {
-        key: 'dragEnterHandler',
-        value: function dragEnterHandler(e) {
-            console.log(e.nativeEvent);
-        }
-    }, {
-        key: 'dragLeaveHandler',
-        value: function dragLeaveHandler(e) {
-            console.log(e.nativeEvent);
-        }
-    }, {
-        key: 'dragHandler',
-        value: function dragHandler(e) {
-            console.log(e.nativeEvent);
-        }
-    }, {
-        key: 'dragEndHandler',
-        value: function dragEndHandler(e) {
-            console.log(e.nativeEvent);
         }
     }, {
         key: 'dropHandler',
         value: function dropHandler(e) {
             e.nativeEvent.preventDefault();
-            console.log(e.nativeEvent);
         }
     }, {
         key: 'dragOverHandler',
         value: function dragOverHandler(e) {
             e.nativeEvent.preventDefault();
-            //console.log(e.nativeEvent);
+            this.props.onDragOver({ clientX: e.nativeEvent.clientX });
         }
-    }, {
-        key: 'componentDidMount',
-        value: function componentDidMount() {}
     }, {
         key: 'renderScale',
         value: function renderScale(item, index) {
-            var marginItem = this.props.items[item.from - 1].rect.left - this.props.items[0].rect.left;
+            var num = +item.from;
+            var marginItem = this.props.items[num - 1].rect.left - this.props.items[0].rect.left;
 
             var sliderWidth = this.props.items[item.to - 1].rect.left + this.props.items[item.to - 1].rect.width - this.props.items[0].rect.left - marginItem;
 
@@ -12138,8 +12233,6 @@ var Slider = function (_React$Component) {
                 'div',
                 { id: 'slider',
                     onDragOver: this.dragOverHandler,
-                    onDragEnter: this.dragEnterHandler,
-                    onDragLeave: this.dragLeaveHandler,
                     onDrop: this.dropHandler
                 },
                 this.props.scales.map(this.renderScale)
@@ -12155,8 +12248,8 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
         onSliderMount: function onSliderMount(data) {
             dispatch((0, _action.setOneIntervalSize)(data));
         },
-        onDragMiddle: function onDragMiddle(data) {
-            dispatch(dragSlide(data));
+        onDragOver: function onDragOver(data) {
+            dispatch((0, _action.dragOver)(data));
         }
     };
 };
@@ -14153,7 +14246,7 @@ var EventPropagators = __webpack_require__(25);
 var ExecutionEnvironment = __webpack_require__(6);
 var ReactDOMComponentTree = __webpack_require__(5);
 var ReactUpdates = __webpack_require__(12);
-var SyntheticEvent = __webpack_require__(14);
+var SyntheticEvent = __webpack_require__(15);
 
 var getEventTarget = __webpack_require__(49);
 var isEventSupported = __webpack_require__(50);
@@ -21169,7 +21262,7 @@ var EventPropagators = __webpack_require__(25);
 var ExecutionEnvironment = __webpack_require__(6);
 var ReactDOMComponentTree = __webpack_require__(5);
 var ReactInputSelection = __webpack_require__(72);
-var SyntheticEvent = __webpack_require__(14);
+var SyntheticEvent = __webpack_require__(15);
 
 var getActiveElement = __webpack_require__(59);
 var isTextInputElement = __webpack_require__(82);
@@ -21369,7 +21462,7 @@ var EventPropagators = __webpack_require__(25);
 var ReactDOMComponentTree = __webpack_require__(5);
 var SyntheticAnimationEvent = __webpack_require__(184);
 var SyntheticClipboardEvent = __webpack_require__(185);
-var SyntheticEvent = __webpack_require__(14);
+var SyntheticEvent = __webpack_require__(15);
 var SyntheticFocusEvent = __webpack_require__(188);
 var SyntheticKeyboardEvent = __webpack_require__(190);
 var SyntheticMouseEvent = __webpack_require__(30);
@@ -21595,7 +21688,7 @@ module.exports = SimpleEventPlugin;
 
 
 
-var SyntheticEvent = __webpack_require__(14);
+var SyntheticEvent = __webpack_require__(15);
 
 /**
  * @interface Event
@@ -21639,7 +21732,7 @@ module.exports = SyntheticAnimationEvent;
 
 
 
-var SyntheticEvent = __webpack_require__(14);
+var SyntheticEvent = __webpack_require__(15);
 
 /**
  * @interface Event
@@ -21682,7 +21775,7 @@ module.exports = SyntheticClipboardEvent;
 
 
 
-var SyntheticEvent = __webpack_require__(14);
+var SyntheticEvent = __webpack_require__(15);
 
 /**
  * @interface Event
@@ -21805,7 +21898,7 @@ module.exports = SyntheticFocusEvent;
 
 
 
-var SyntheticEvent = __webpack_require__(14);
+var SyntheticEvent = __webpack_require__(15);
 
 /**
  * @interface Event
@@ -21986,7 +22079,7 @@ module.exports = SyntheticTouchEvent;
 
 
 
-var SyntheticEvent = __webpack_require__(14);
+var SyntheticEvent = __webpack_require__(15);
 
 /**
  * @interface Event

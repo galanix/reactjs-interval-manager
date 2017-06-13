@@ -1,4 +1,3 @@
-
 export function changeMin(data) {
     return {
         type: "NEW_MIN",
@@ -39,6 +38,26 @@ export function addInterval(data) {
     return {
         type: "ADD_INTERVAL",
         data: data
+    }
+}
+
+export function dragMiddle(data) {
+    return {
+        type: "MIDDLE_DRAG_START",
+        data: data
+    }
+}
+
+export function dragOver(data) {
+    return {
+        type: "MIDDLE_DRAG_OVER",
+        data: data
+    }
+}
+
+export function endDraging() {
+    return {
+        type: "DRAG_END",
     }
 }
 

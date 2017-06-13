@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { setOneIntervalSize } from '../action';
+import { dragOver } from '../action';
 import IntervalComponent from './IntervalComponent';
 
 
@@ -11,60 +12,28 @@ class Slider extends React.Component {
         this.dragStartHandler = this.dragStartHandler.bind(this);
         this.dragOverHandler = this.dragOverHandler.bind(this);
         this.dropHandler = this.dropHandler.bind(this);
-        this.dragEnterHandler = this.dragEnterHandler.bind(this);
-        this.dragHandler = this.dragHandler.bind(this);
-        this.dragEndHandler = this.dragEndHandler.bind(this);
-        this.dragLeaveHandler = this.dragLeaveHandler.bind(this);
         this.renderScale = this.renderScale.bind(this);
 
     }
 
     dragStartHandler(e) {
         e.nativeEvent.preventDefault();
-        console.log(e.target.className);
-       /* switch(e.target.className) {
-            case "middle":
-                onDragMiddle();
-        }*/
-        //this.props.
         e.nativeEvent.dataTransfer.setData('text/html',null);
-        
-        console.log(e.nativeEvent);
-    }
-
-    dragEnterHandler(e) {
-        console.log(e.nativeEvent);
-    }
-
-    dragLeaveHandler(e) {
-        console.log(e.nativeEvent);
-    }
-
-    dragHandler(e) {
-        console.log(e.nativeEvent);
-    }
-
-    dragEndHandler(e) {
-        console.log(e.nativeEvent);
     }
 
     dropHandler(e) {
         e.nativeEvent.preventDefault();
-        console.log(e.nativeEvent);
     }
 
     dragOverHandler(e) {
         e.nativeEvent.preventDefault();
-        //console.log(e.nativeEvent);
-    }
-
-    componentDidMount() {
-
+        this.props.onDragOver({ clientX: e.nativeEvent.clientX});
     }
 
     renderScale(item, index) {
+        var num = +item.from;
         var marginItem = 
-                this.props.items[item.from-1].rect.left
+                this.props.items[num-1].rect.left
                 - this.props.items[0].rect.left
 
         var sliderWidth = 
@@ -82,9 +51,7 @@ class Slider extends React.Component {
         return (
             <div id="slider" 
                 onDragOver={this.dragOverHandler}
-                onDragEnter={this.dragEnterHandler}
-                onDragLeave={this.dragLeaveHandler}
-                onDrop={this.dropHandler} 
+                onDrop={this.dropHandler}
             >
 
             {this.props.scales.map(this.renderScale)}
@@ -99,8 +66,8 @@ const mapDispatchToProps = (dispatch) => {
     onSliderMount: (data) => {
         dispatch(setOneIntervalSize(data));
     },
-    onDragMiddle: (data) => {
-        dispatch(dragSlide(data));
+    onDragOver: (data) => {
+        dispatch(dragOver(data));
     }
   }
 }
